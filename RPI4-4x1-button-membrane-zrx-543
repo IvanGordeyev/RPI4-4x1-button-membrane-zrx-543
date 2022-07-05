@@ -1,0 +1,55 @@
+# Importing dependencies (you might need to install these e.g. via pip install keyboard)
+
+import RPi.GPIO as GPIO
+import time
+import subprocess
+import keyboard #requires root
+
+#Function that is called when pin activity is detected
+def button_handler(pin):
+    print("pin %s's value is %s" % (pin, GPIO.input(pin)))
+    
+    if pin==35:
+        print("Button was pushed on GPIO 35! Taking Screenshot. (Left 1 of 4)")
+        subprocess.call(["python","SubProcess/TakeScreenshot.py"])
+    
+    if pin==37:
+        print("Button was pushed on GPIO 37! was pushed! (Left 2 of 4)")
+        keyboard.write('The quick brown fox jumps over the lazy dog.') #requires root
+            
+    if pin==31:
+        print("Button was pushed on GPIO 31! (Left 3 of 4)")
+        
+    if pin==33:
+        print("Button was pushed on GPIO 33! (Left 4 of 4)")
+
+if __name__ == '__main__':
+
+    GPIO.setmode(GPIO.BOARD)
+    
+    GPIO.setup(31, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 31 to be an input pin and set initial value to be pulled low (off)
+    GPIO.setup(33, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 33 to be an input pin and set initial value to be pulled low (off)
+    GPIO.setup(35, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 35 to be an input pin and set initial value to be pulled low (off)
+    GPIO.setup(37, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 37 to be an input pin and set initial value to be pulled low (off)
+
+    # events can be GPIO.RISING, GPIO.FALLING, or GPIO.BOTH
+    GPIO.add_event_detect(35, GPIO.BOTH,
+                          callback=button_handler,
+                          bouncetime=1200)
+    
+    GPIO.add_event_detect(31, GPIO.BOTH,
+                          callback=button_handler,
+                          bouncetime=500)
+    
+    GPIO.add_event_detect(33, GPIO.BOTH,
+                          callback=button_handler,
+                          bouncetime=500)
+    
+    GPIO.add_event_detect(37, GPIO.BOTH,
+                          callback=button_handler,
+                          bouncetime=500)
+
+    try:
+        time.sleep(1000)
+    except KeyboardInterrupt:
+        GPIO.cleanup()
