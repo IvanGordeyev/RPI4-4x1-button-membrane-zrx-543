@@ -4,7 +4,9 @@ Simple script allowing Raspberry pi 4 to recognise which button is pressed, whil
 
 Status:
 README: - Work in progress - 05/07/2022
+
 Code: - Adequate - 05/07/2022
+
 
 Setup:
 TBC - 05/07/2022
